@@ -1,0 +1,7 @@
+pipeline:
+  docker:
+    image: plugins/docker
+    registry: registry.paas.workslan
+    repo: registry.paas.workslan/drone-plugins/drone-kubernetes
+    secrets: [ docker_username, docker_password ]
+    tags: latest

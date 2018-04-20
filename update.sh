@@ -39,10 +39,10 @@ for DEPLOY in ${DEPLOYMENTS[@]}; do
   echo Deploying to $KUBERNETES_SERVER
   for CONTAINER in ${CONTAINERS[@]}; do
     if [[ ${PLUGIN_FORCE} == "true" ]]; then
-      kubectl -n ${PLUGIN_NAMESPACE} set image deployment/${DEPLOY} \
-        ${CONTAINER}=${PLUGIN_REPO}:${PLUGIN_TAG}FORCE
+      echo "Force rollout by applying meaningless annotation"
+      kubectl -n ${PLUGIN_NAMESPACE} set image deployment/${DEPLOY} ${CONTAINER}=${PLUGIN_REPO}:${PLUGIN_TAG}
+      kubectl patch deployment -n ${PLUGIN_NAMESPACE} ${DEPLOY} -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"updatedAt\":\"`date +'%s'`\"}}}}}"
     fi
-    kubectl -n ${PLUGIN_NAMESPACE} set image deployment/${DEPLOY} \
-      ${CONTAINER}=${PLUGIN_REPO}:${PLUGIN_TAG} --record
+    kubectl -n ${PLUGIN_NAMESPACE} set image deployment/${DEPLOY} ${CONTAINER}=${PLUGIN_REPO}:${PLUGIN_TAG} --record
   done
 done
